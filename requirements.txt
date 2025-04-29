@@ -1,9 +1,11 @@
 streamlit
+streamlit-extras
 pandas
 numpy
-matplotlib
-scipy
-statsmodels
 yfinance
-pandas_datareader
-setuptools
+matplotlib
+statsmodels
+feedparser
+vaderSentiment
+nltk
+scikit-learn

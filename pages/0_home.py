@@ -16,7 +16,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS for background and text
+# Custom CSS for background and text styling
 st.markdown("""
     <style>
     .css-18e3th9 {
@@ -27,6 +27,7 @@ st.markdown("""
         padding: 1rem 2rem;
         font-size: 1.5rem;
         font-weight: bold;
+        margin-bottom: 1rem;
     }
     h1 {
         text-align: center;
@@ -60,14 +61,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Main Title
+# Title and subtitle
 st.markdown("<h1>📈 Welcome to Event Study Dashboard</h1>", unsafe_allow_html=True)
-st.markdown("<h3>Analyze the Impact of Events on Stock Performance</h3>", unsafe_allow_html=True)
+st.markdown("<h3>Analyze the Impact of Real-World Events on Stock Performance</h3>", unsafe_allow_html=True)
 
-# Add some space
-st.markdown("###")
 st.markdown("###")
 
-# CTA Button
+# Buttons to navigate to other pages
 if st.button('🚀 Go to Event Study Dashboard'):
     st.switch_page("pages/2_event_study_dashboard.py")
+
+if st.button('📰 Go to Event Browser'):
+    st.switch_page("pages/1_event_browser.py")
