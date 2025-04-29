@@ -9,8 +9,9 @@ Original file is located at
 
 import streamlit as st
 import pandas as pd
-from utils import load_stock_data, load_market_data, calculate_market_model_car, calculate_fama_french_car, plot_car_graph, plot_ci_graph
 import os
+import yfinance as yf
+from utils import load_stock_data, load_market_data, calculate_market_model_car, calculate_fama_french_car, plot_car_graph, plot_ci_graph
 
 # Set Page Config
 st.set_page_config(
@@ -61,6 +62,42 @@ if analyze or st.session_state.get("run_analysis", False):
     else:
         st.warning("Logo not available for this stock.")
 
+    # 🆕 Stock Snapshot Section
+    try:
+        ticker_obj = yf.Ticker(selected_ticker)
+        stock_info = ticker_obj.info
+
+        # 🏦 Show Stock Quick Overview
+        st.markdown("### 🏦 Stock Snapshot")
+        col1, col2 = st.columns(2)
+        col1.metric("💲 Current Price", f"${stock_info.get('currentPrice', 'N/A')}")
+        col2.metric("📈 1-Day Change", f"{stock_info.get('regularMarketChangePercent', 0):.2f}%")
+
+        # 📈 1-Month Price Trend
+        st.markdown("### 📈 1-Month Price Trend")
+        hist = ticker_obj.history(period="1mo")
+        if not hist.empty:
+            st.line_chart(hist["Close"])
+        else:
+            st.warning("Price history unavailable.")
+
+        # 📊 Company Ratios
+        st.markdown("### 📊 Company Overview")
+        col3, col4 = st.columns(2)
+        with col3:
+            st.write(f"**Sector:** {stock_info.get('sector', 'N/A')}")
+            st.write(f"**Industry:** {stock_info.get('industry', 'N/A')}")
+            st.write(f"**Market Cap:** ${stock_info.get('marketCap', 'N/A'):,}")
+        with col4:
+            st.write(f"**P/E Ratio:** {stock_info.get('trailingPE', 'N/A')}")
+            st.write(f"**Dividend Yield:** {stock_info.get('dividendYield', 'N/A')}")
+
+        st.markdown("---")
+
+    except Exception as e:
+        st.warning(f"Could not load stock snapshot: {e}")
+
+    # Event Study Analysis
     start_date = pd.to_datetime(selected_event_date) - pd.Timedelta(days=60)
     end_date = pd.to_datetime(selected_event_date) + pd.Timedelta(days=60)
 
@@ -75,16 +112,16 @@ if analyze or st.session_state.get("run_analysis", False):
 
         # KPI Calculations
         abnormal_returns = results['abnormal_return']
-        CAR_final = abnormal_returns.cumsum().iloc[-1] * 100  # Final CAR %
+        CAR_final = abnormal_returns.cumsum().iloc[-1] * 100
         normal_return = results['expected_return'].cumsum().iloc[-1] * 100
         actual_return = results['stock_return'].cumsum().iloc[-1] * 100
 
         # Display KPIs
         st.markdown("### 📊 Event Impact Metrics")
-        col1, col2, col3 = st.columns(3)
-        col1.metric("📈 Actual Return", f"{actual_return:.2f}%")
-        col2.metric("📉 Expected Return (Normal)", f"{normal_return:.2f}%")
-        col3.metric("🚀 CAR (Impact)", f"{CAR_final:.2f}%")
+        col5, col6, col7 = st.columns(3)
+        col5.metric("📈 Actual Return", f"{actual_return:.2f}%")
+        col6.metric("📉 Expected Return (Normal)", f"{normal_return:.2f}%")
+        col7.metric("🚀 CAR (Impact)", f"{CAR_final:.2f}%")
 
         st.markdown("---")
 
