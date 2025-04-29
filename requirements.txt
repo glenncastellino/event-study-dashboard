@@ -6,3 +6,4 @@ scipy
 statsmodels
 yfinance
 pandas_datareader
+setuptools
