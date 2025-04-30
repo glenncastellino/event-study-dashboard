@@ -73,7 +73,7 @@ def get_live_events():
             headline = entry.title
 
             # 🛑 Filter out stock-focused headlines
-            if any(keyword in headline.lower() for keyword in ["stock", "share price"]):
+            if any(keyword in headline.lower() for keyword in ["stock", "share price","shares"]):
                 continue
 
             records.append({
