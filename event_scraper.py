@@ -44,7 +44,7 @@ def classify_news_type(headline):
     else:
         return "General News"
 
-# VADER sentiment
+# VADER sentiment scoring
 def get_sentiment_vader(headline):
     score = sia.polarity_scores(headline)
     if score['compound'] >= 0.05:
@@ -54,7 +54,7 @@ def get_sentiment_vader(headline):
     else:
         return "Neutral"
 
-# Main function
+# Scraper function
 def get_live_events():
     tickers = list(industry_map.keys())
     records = []
@@ -71,6 +71,11 @@ def get_live_events():
                 continue
 
             headline = entry.title
+
+            # 🛑 Filter out stock-focused headlines
+            if any(keyword in headline.lower() for keyword in ["stock", "share price"]):
+                continue
+
             records.append({
                 "ticker": ticker,
                 "headline": headline,
@@ -85,7 +90,7 @@ def get_live_events():
     df = df.dropna(subset=["event_date"])
     df = df.sort_values(by="event_date", ascending=False).reset_index(drop=True)
 
-    # 🆕 LIMIT to top 500 articles
-    df = df.head(500)
+    # 🧠 Limit to 1000 most recent
+    df = df.head(1000)
 
     return df
