@@ -2,7 +2,7 @@ streamlit
 streamlit-extras
 pandas
 numpy
-yfinance
+yfinance==0.2.54 
 matplotlib
 statsmodels
 feedparser
