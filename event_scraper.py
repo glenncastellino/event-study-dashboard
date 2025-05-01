@@ -89,6 +89,7 @@ def get_live_events():
     df = pd.DataFrame(records)
     df = df.dropna(subset=["event_date"])
     df = df.sort_values(by="event_date", ascending=False).reset_index(drop=True)
+    df = df[df["news_type"] == "Tariff"]
 
     # 🧠 Limit to 1000 most recent
     df = df.head(1000)
