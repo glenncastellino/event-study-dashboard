@@ -16,6 +16,7 @@ from scipy import stats
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 
+
 def load_stock_data(ticker, start_date, end_date):
     stock = yf.download(ticker, start=start_date, end=end_date)
 
